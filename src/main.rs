@@ -1,17 +1,18 @@
 use std::process::exit;
 use std::env as console;
-
 use colored::*;
+
 pub fn annotate(minefield: &[&str]) -> Vec<String> {
     
-    let completed: Vec<String> = Vec::new();
+    let mut completed: Vec<String> = Vec::new();
     
-    let width=minefield.len();
-    let lenght:u64=lenght_calculator(minefield[0]);
+    let width =minefield.len();
+    let lenght=minefield[0].chars().count();
     
     for i in 0..width{
         for j in 0..lenght{
-            print!("|");
+            print!("{:?}",minefield[i].chars().nth(j));
+         //  if minefield[i].chars().nth(j) == '*'{
             if i==0 {
                 
             }else if  i==width{
@@ -30,28 +31,17 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
                 
             }else {
                 
-            }
-
+           // }
+           }
 
         }
         println!();
     }
-    //print!("{:?}",_minefield[0].chars().nth(2));
+    //print!("{:?}",minefield[0].chars().nth(2));
     
     print!("width:{}, length:{}",width,lenght);
 
     completed
-}
-
-pub fn lenght_calculator(row: &str) -> u64{
-   
-    let mut lenght:u64=0;
-    
-    for _i in row.chars(){
-        lenght+=1;
-    }
-
-    lenght
 }
 
 pub fn input_validation(initial: &str) -> Vec<&str>{
@@ -70,10 +60,10 @@ pub fn input_validation(initial: &str) -> Vec<&str>{
         formatted.push(i);
     }
 
-    let lenght=lenght_calculator(formatted[0]);
+    let lenght=formatted[0].chars().count();
 
     for i in &formatted{
-        let verifier=lenght_calculator(i);
+        let verifier=i.chars().count();
 
         if verifier != lenght {
             eprintln!("{}: the minesweeper can't have different sized rows.","Error".red().bold());
@@ -90,7 +80,7 @@ pub fn input_validation(initial: &str) -> Vec<&str>{
 
 }
 
-pub fn argument_reading() -> String{
+/*pub fn argument_reading() -> String{
 
     let mut read = String::new();
     if console::args().count() !=2 {
@@ -103,16 +93,16 @@ pub fn argument_reading() -> String{
     }
 
     read
-}
+} */
 
 fn main() {
     
-  //  let initial: &str = "·*·*·\n··*··\n··*··\n·····";
-    let test=argument_reading();
-    let initial= test.as_str();
+    let initial: &str = "·*·*·\n··*··\n··*··\n·····";
+   // let test=argument_reading();
+   // let initial= test.as_str();
     let minefield=input_validation(initial);
 
-    println!("{}",test);
+    //println!("{}",test);
     //println!("{:?}",minefield);
     annotate(&minefield);
 }

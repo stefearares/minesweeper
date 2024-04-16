@@ -11,8 +11,8 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
     
     for i in 0..width{
         for j in 0..lenght{
-            print!("{:?}",minefield[i].chars().nth(j));
-         //  if minefield[i].chars().nth(j) == '*'{
+            print!("{}",minefield[i].chars().nth(j).unwrap());
+          if minefield[i].chars().nth(j).unwrap() == '*'{
             if i==0 {
                 
             }else if  i==width{
@@ -31,13 +31,12 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
                 
             }else {
                 
-           // }
+            }
            }
-
+           
         }
-        println!();
+        println!("");
     }
-    //print!("{:?}",minefield[0].chars().nth(2));
     
     print!("width:{}, length:{}",width,lenght);
 

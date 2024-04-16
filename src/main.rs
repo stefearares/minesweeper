@@ -1,6 +1,7 @@
 use std::process::exit;
 use std::env as console;
 use colored::*;
+use std::char;
 
 pub fn annotate(minefield: &[&str]) -> Vec<String> {
     
@@ -9,25 +10,45 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
     let width =minefield.len();
     let lenght=minefield[0].chars().count();
     
+    let mut helper: String=String::new();
+
     for i in 0..width{
         for j in 0..lenght{
-            print!("{}",minefield[i].chars().nth(j).unwrap());
-          if minefield[i].chars().nth(j).unwrap() == '*'{
-            if i==0 {
+          if minefield[i].chars().nth(j).unwrap() == '·'{
+            if i==0 && j==0 {
+                let mut counter=0;
+                if  minefield[i].chars().nth(j+1).unwrap() == '*'{ 
+                    counter+=1;
+                }
+
+                if  minefield[i+1].chars().nth(j).unwrap() == '*'{
+                    counter+=1;
+                }
+
+                if minefield[i+1].chars().nth(j+1).unwrap() == '*' {
+                    counter+=1
+                }
                 
-            }else if  i==width{
+                if counter!=0{
+                    let mut counter_char=(counter + b'0') as char;
+                    helper.push(counter_char);
+                }else {
+                    helper.push('-');
+                }
                 
-            }else if j==0 {
-                
-            }else if j==lenght {
-                
-            }else if i==0 && j==0 {
-                
-            }else if i==width && j==lenght {
+            }else if  i==width && j==lenght{
                 
             }else if i==width && j==0 {
                 
             }else if i==0 && j==lenght {
+                
+            }else if i==0 {
+                
+            }else if i==width {
+                
+            }else if j==0 {
+                
+            }else if j==lenght {
                 
             }else {
                 
@@ -35,10 +56,9 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
            }
            
         }
-        println!("");
+        completed.push(helper.clone());
+        helper.clear();
     }
-    
-    print!("width:{}, length:{}",width,lenght);
 
     completed
 }

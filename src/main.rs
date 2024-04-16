@@ -12,7 +12,27 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
     for i in 0..width{
         for j in 0..lenght{
             print!("|");
-            todo!("implement bomb replace logic using comment");
+            if i==0 {
+                
+            }else if  i==width{
+                
+            }else if j==0 {
+                
+            }else if j==lenght {
+                
+            }else if i==0 && j==0 {
+                
+            }else if i==width && j==lenght {
+                
+            }else if i==width && j==0 {
+                
+            }else if i==0 && j==lenght {
+                
+            }else {
+                
+            }
+
+
         }
         println!();
     }

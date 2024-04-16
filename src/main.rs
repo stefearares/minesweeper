@@ -1,4 +1,5 @@
 use std::process::exit;
+use std::env as console;
 
 use colored::*;
 pub fn annotate(minefield: &[&str]) -> Vec<String> {
@@ -69,19 +70,29 @@ pub fn input_validation(initial: &str) -> Vec<&str>{
 
 }
 
-pub fn argument_validation() -> &str{
+pub fn argument_reading() -> String{
 
-    let arg: &str="";
-    
-    arg
+    let mut read = String::new();
+    if console::args().count() !=2 {
+        eprintln!("{} not the right arguments - build run <minesweeper>;","Error:".bold().red());
+        exit(1);
+    }
+
+    for i in console::args().skip(1){
+        read=i;
+    }
+
+    read
 }
 
 fn main() {
     
-    let initial: &str = "·*·*·\n··*··\n··*··\n·····";
-
+  //  let initial: &str = "·*·*·\n··*··\n··*··\n·····";
+    let test=argument_reading();
+    let initial= test.as_str();
     let minefield=input_validation(initial);
 
-    println!("{:?}",minefield);
+    println!("{}",test);
+    //println!("{:?}",minefield);
     annotate(&minefield);
 }

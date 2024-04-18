@@ -10,6 +10,10 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
     let width = minefield.len() ;
     let lenght= minefield[0].chars().count();
     
+    if width==0 && lenght==0{
+        completed.push("".to_string());
+        return completed;
+    }
     let mut helper: String=String::new();
 
     for i in 0..width{
@@ -126,6 +130,26 @@ fn main() {
 mod tests {
     use super::*;
 
+    #[test]
+    fn speical_case_test1(){
+        let initial: &str ="";
+        let minefield=input_validation(initial);
+        assert_eq!(annotate(&minefield),[""])
+    }
+
+    #[test]
+    fn speical_case_test2(){
+        let initial: &str =" ";
+        let minefield=input_validation(initial);
+        assert_eq!(annotate(&minefield),["·"])
+    }
+
+    #[test]
+    fn speical_case_test3(){
+        let initial: &str ="*";
+        let minefield=input_validation(initial);
+        assert_eq!(annotate(&minefield),["*"])
+    }
     #[test]
     fn  cases_test1(){
         let initial: &str ="·*·*·\n··*··\n··*··\n·····";

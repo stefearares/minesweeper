@@ -12,6 +12,103 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
     
     let mut helper: String=String::new();
 
+    if width==1 {
+        for j in 0..=lenght-1{
+            if minefield[0].chars().nth(j).unwrap() == '·'{
+            if j==0{
+                let mut counter=0;
+                if minefield[0].chars().nth(j+1).unwrap() == '*'{
+                    counter+=1;
+                }
+                if counter!=0{
+                    let counter_char=(counter + b'0') as char;
+                    helper.push(counter_char);
+                }
+                else {
+                    helper.push('·');
+                }
+            }else if j==lenght-1 {
+                let mut counter=0;
+                if minefield[0].chars().nth(j-1).unwrap() == '*'{
+                    counter+=1;
+                }
+                if counter!=0{
+                    let counter_char=(counter + b'0') as char;
+                    helper.push(counter_char);
+                }
+                else {
+                    helper.push('·');
+                }
+            }else {
+                let mut counter=0;
+                if minefield[0].chars().nth(j-1).unwrap() == '*'{
+                    counter+=1;
+                }
+                if minefield[0].chars().nth(j+1).unwrap() == '*'{
+                    counter+=1;
+                }
+                if counter!=0{
+                    let counter_char=(counter + b'0') as char;
+                    helper.push(counter_char);
+                }
+                else {
+                    helper.push('·');
+                }
+            }
+        }else {
+            helper.push('*');
+        }
+    }
+        completed.push(helper);
+    }else if lenght==1 {
+        for j in  0..=width-1{
+            if minefield[j].starts_with('·'){
+                if j==0{
+                    let mut counter=0;
+                    if minefield[j+1].starts_with('*'){
+                        counter+=1;
+                    }
+                    if counter!=0{
+                        let counter_char=(counter + b'0') as char;
+                        helper.push(counter_char);
+                    }
+                    else {
+                        helper.push('·');
+                    }
+                }else if j==width-1 {
+                    let mut counter=0;
+                    if minefield[j-1].starts_with('*'){
+                        counter+=1;
+                    }
+                    if counter!=0{
+                        let counter_char=(counter + b'0') as char;
+                        helper.push(counter_char);
+                    }
+                    else {
+                        helper.push('·');
+                    }
+                }else {
+                    let mut counter=0;
+                    if minefield[j+1].starts_with('*'){
+                        counter+=1;
+                    }
+                    if minefield[j-1].starts_with('*'){
+                        counter+=1;
+                    }
+                    if counter!=0{
+                        let counter_char=(counter + b'0') as char;
+                        helper.push(counter_char);
+                    }
+                    else {
+                        helper.push('·');
+                    }
+                }
+            }else {
+                helper.push('*');
+            }
+        }
+        completed.push(helper)
+    }else {
     for i in 0..=width-1{
         for j in 0..=lenght-1{
           if minefield[i].chars().nth(j).unwrap() == '*'{
@@ -265,27 +362,29 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
         }
         completed.push(helper.clone());
         helper.clear();
-    }
+    }}
 
     completed
 }
 
 pub fn input_validation(initial: &str) -> Vec<&str>{
 
-   /* */ for i in initial.chars()
+    for i in initial.chars()
     {
         if i != '·' && i != '*' && i != '\n' && i!=' '{
             eprintln!("{}: {} is not valid <'·',' ' for free space and '*' for bombs>","Error".red().bold(),i);
             exit(1);
         }
     }
+
+
     let split=initial.split('\n');
     let mut formatted:Vec<&str>=Vec::new();
 
     for i in split{
         formatted.push(i);
     }
-
+ 
     let lenght=formatted[0].chars().count();
    
     for i in &formatted{
@@ -296,12 +395,6 @@ pub fn input_validation(initial: &str) -> Vec<&str>{
             exit(1);
         }
     }
-
-    if formatted.len() == 1{
-        eprintln!("{}: the minesweeper has to be atleast 2 lines long.","Error".red().bold());
-        exit(1);
-    }
-
      
     formatted
 
@@ -324,11 +417,16 @@ pub fn input_validation(initial: &str) -> Vec<&str>{
 
 fn main() {
     
-    let initial: &str ="···\n·*·\n···";
-    let minefield=input_validation(initial);
+    let initial: &str ="*\n \n*";
+    if initial.len()==0 || initial.len()==1{
+        println!("{:}",initial);
+    }
+    else{
+    let new= initial.replace(' ', "·");
+    let minefield=input_validation(&new);
     let completed=annotate(&minefield);
     
     for i in completed{
         println!("{}",i);
-    }
+    }}
 }

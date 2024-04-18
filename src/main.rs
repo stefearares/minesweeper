@@ -20,20 +20,21 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
                 if  minefield[i].chars().nth(j+1).unwrap() == '*'{ 
                     counter+=1;
                 }
-
+                
                 if  minefield[i+1].chars().nth(j).unwrap() == '*'{
                     counter+=1;
                 }
-
+                
                 if minefield[i+1].chars().nth(j+1).unwrap() == '*' {
                     counter+=1
                 }
                 
                 if counter!=0{
                     let mut counter_char=(counter + b'0') as char;
+                    
                     helper.push(counter_char);
                 }else {
-                    helper.push('-');
+                    helper.push('·');
                 }
                 
             }else if  i==width && j==lenght{
@@ -80,7 +81,7 @@ pub fn input_validation(initial: &str) -> Vec<&str>{
     }
 
     let lenght=formatted[0].chars().count();
-
+   
     for i in &formatted{
         let verifier=i.chars().count();
 
@@ -95,6 +96,7 @@ pub fn input_validation(initial: &str) -> Vec<&str>{
         exit(1);
     }
 
+     
     formatted
 
 }
@@ -120,7 +122,6 @@ fn main() {
    // let test=argument_reading();
    // let initial= test.as_str();
     let minefield=input_validation(initial);
-
     //println!("{}",test);
     //println!("{:?}",minefield);
     annotate(&minefield);

@@ -36,13 +36,9 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
                     let counter_char=(counter + b'0') as char;
                     
                     helper.push(counter_char);
-                }else if minefield[i].chars().nth(j).unwrap() == ' ' {
-                    helper.push(' ')
-                }
-                else {
+                }else { 
                     helper.push('·');
                 }
-                
             }else if  i==width-1 && j==lenght-1{
                 
                 let mut counter=0;
@@ -63,13 +59,9 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
                     let counter_char=(counter + b'0') as char;
                     
                     helper.push(counter_char);
-                }else if minefield[i].chars().nth(j).unwrap() == ' ' {
-                    helper.push(' ')
+                }else {
+                     helper.push('·');
                 }
-                else {
-                    helper.push('·');
-                }
-
             }else if i==width-1 && j==0 {
                 
                 let mut counter=0;
@@ -90,11 +82,8 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
                     let counter_char=(counter + b'0') as char;
                     
                     helper.push(counter_char);
-                }else if minefield[i].chars().nth(j).unwrap() == ' ' {
-                    helper.push(' ')
-                }
-                else {
-                    helper.push('·');
+                }else{
+                     helper.push('·');
                 }
             }else if i==0 && j==lenght-1 {
                 let mut counter=0;
@@ -146,10 +135,7 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
                     let counter_char=(counter + b'0') as char;
                     
                     helper.push(counter_char);
-                }else if minefield[i].chars().nth(j).unwrap() == ' ' {
-                    helper.push(' ')
-                }
-                else {
+                }else{ 
                     helper.push('·');
                 }
             }else if i==width-1 {
@@ -177,10 +163,7 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
                     let counter_char=(counter + b'0') as char;
                     
                     helper.push(counter_char);
-                }else if minefield[i].chars().nth(j).unwrap() == ' ' {
-                    helper.push(' ')
-                }
-                else {
+                }else{ 
                     helper.push('·');
                 }
             }else if j==0 {
@@ -208,10 +191,7 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
                     let counter_char=(counter + b'0') as char;
                     
                     helper.push(counter_char);
-                }else if minefield[i].chars().nth(j).unwrap() == ' ' {
-                    helper.push(' ')
-                }
-                else {
+                }else{ 
                     helper.push('·');
                 }
             }else if j==lenght-1 {
@@ -239,10 +219,7 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
                     let counter_char=(counter + b'0') as char;
                     
                     helper.push(counter_char);
-                }else if minefield[i].chars().nth(j).unwrap() == ' ' {
-                    helper.push(' ')
-                }
-                else {
+                }else{ 
                     helper.push('·');
                 }
             }else {
@@ -279,11 +256,8 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
                     let counter_char=(counter + b'0') as char;
                     
                     helper.push(counter_char);
-                }else if minefield[i].chars().nth(j).unwrap() == ' ' {
-                    helper.push(' ')
-                }
-                else {
-                    helper.push('·');
+                }else{ 
+                    helper.push('·')
                 }
             }
            }
@@ -298,10 +272,10 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
 
 pub fn input_validation(initial: &str) -> Vec<&str>{
 
-    for i in initial.chars()
+   /* */ for i in initial.chars()
     {
         if i != '·' && i != '*' && i != '\n' && i!=' '{
-            eprintln!("{}: {} is not valid <'.',' ' for free space and '*' for bombs>","Error".red().bold(),i);
+            eprintln!("{}: {} is not valid <'·',' ' for free space and '*' for bombs>","Error".red().bold(),i);
             exit(1);
         }
     }
@@ -350,7 +324,7 @@ pub fn input_validation(initial: &str) -> Vec<&str>{
 
 fn main() {
     
-    let initial: &str = "·*·*·\n··*··\n··*··\n·····";
+    let initial: &str ="···\n·*·\n···";
     let minefield=input_validation(initial);
     let completed=annotate(&minefield);
     

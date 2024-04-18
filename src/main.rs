@@ -7,364 +7,78 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
     
     let mut completed: Vec<String> = Vec::new();
     
-    let width =minefield.len();
-    let lenght=minefield[0].chars().count();
+    let width = minefield.len() ;
+    let lenght= minefield[0].chars().count();
     
     let mut helper: String=String::new();
 
-    if width==1 {
-        for j in 0..=lenght-1{
-            if minefield[0].chars().nth(j).unwrap() == '·'{
-            if j==0{
-                let mut counter=0;
-                if minefield[0].chars().nth(j+1).unwrap() == '*'{
-                    counter+=1;
-                }
-                if counter!=0{
-                    let counter_char=(counter + b'0') as char;
-                    helper.push(counter_char);
-                }
-                else {
-                    helper.push('·');
-                }
-            }else if j==lenght-1 {
-                let mut counter=0;
-                if minefield[0].chars().nth(j-1).unwrap() == '*'{
-                    counter+=1;
-                }
-                if counter!=0{
-                    let counter_char=(counter + b'0') as char;
-                    helper.push(counter_char);
-                }
-                else {
-                    helper.push('·');
-                }
-            }else {
-                let mut counter=0;
-                if minefield[0].chars().nth(j-1).unwrap() == '*'{
-                    counter+=1;
-                }
-                if minefield[0].chars().nth(j+1).unwrap() == '*'{
-                    counter+=1;
-                }
-                if counter!=0{
-                    let counter_char=(counter + b'0') as char;
-                    helper.push(counter_char);
-                }
-                else {
-                    helper.push('·');
-                }
-            }
-        }else {
-            helper.push('*');
-        }
-    }
-        completed.push(helper);
-    }else if lenght==1 {
-        for j in  0..=width-1{
-            if minefield[j].starts_with('·'){
-                if j==0{
-                    let mut counter=0;
-                    if minefield[j+1].starts_with('*'){
-                        counter+=1;
-                    }
-                    if counter!=0{
-                        let counter_char=(counter + b'0') as char;
-                        helper.push(counter_char);
-                    }
-                    else {
-                        helper.push('·');
-                    }
-                }else if j==width-1 {
-                    let mut counter=0;
-                    if minefield[j-1].starts_with('*'){
-                        counter+=1;
-                    }
-                    if counter!=0{
-                        let counter_char=(counter + b'0') as char;
-                        helper.push(counter_char);
-                    }
-                    else {
-                        helper.push('·');
-                    }
-                }else {
-                    let mut counter=0;
-                    if minefield[j+1].starts_with('*'){
-                        counter+=1;
-                    }
-                    if minefield[j-1].starts_with('*'){
-                        counter+=1;
-                    }
-                    if counter!=0{
-                        let counter_char=(counter + b'0') as char;
-                        helper.push(counter_char);
-                    }
-                    else {
-                        helper.push('·');
-                    }
-                }
-            }else {
+    let l_width = width -1;
+    let l_lenght = lenght -1;
+
+    for i in 0..width{
+        for j in 0..lenght{
+
+            if minefield[i].chars().nth(j).unwrap() == '*'{
                 helper.push('*');
             }
-        }
-        completed.push(helper)
-    }else {
-    for i in 0..=width-1{
-        for j in 0..=lenght-1{
-          if minefield[i].chars().nth(j).unwrap() == '*'{
-            helper.push('*');
-          }
-          if minefield[i].chars().nth(j).unwrap() == '·'{
-            if i==0 && j==0 {
+
+            if minefield[i].chars().nth(j).unwrap() == '·' || minefield[i].chars().nth(j).unwrap() == ' ' {
                 let mut counter=0;
-                if  minefield[i].chars().nth(j+1).unwrap() == '*'{ 
+
+                if i != 0 && minefield[i-1].chars().nth(j).unwrap() == '*' {
                     counter+=1;
                 }
                 
-                if  minefield[i+1].chars().nth(j).unwrap() == '*'{
-                    counter+=1;
-                }
+                if i != l_width{
+                    if  minefield[i+1].chars().nth(j).unwrap() == '*'{
+                        counter+=1;
+                    }}   
                 
-                if minefield[i+1].chars().nth(j+1).unwrap() == '*' {
-                    counter+=1
+                if j != 0{
+                    if  minefield[i].chars().nth(j-1).unwrap() == '*'{
+                        counter+=1;
+                    }
                 }
-                
-                if counter!=0{
-                    let counter_char=(counter + b'0') as char;
-                    
+
+                if j != l_lenght{
+                    if  minefield[i].chars().nth(j+1).unwrap() == '*'{
+                        counter+=1;
+                    }
+                }
+
+                if i != 0 && j != 0{
+                    if minefield[i-1].chars().nth(j-1).unwrap() == '*'{
+                        counter+=1;
+                    }
+                }
+
+                if i != l_width && j != l_lenght{
+                    if minefield[i+1].chars().nth(j+1).unwrap() == '*'{
+                        counter+=1;
+                    }
+                }
+
+                if i != 0 && j != l_lenght && minefield[i-1].chars().nth(j+1).unwrap() == '*' {
+                    counter += 1;
+                }
+                if i != l_width && j != 0 && minefield[i+1].chars().nth(j-1).unwrap() == '*' {
+                    counter += 1;
+                }
+
+                if counter != 0 {
+                    let mut counter_char=(counter + b'0') as char;
                     helper.push(counter_char);
-                }else { 
+                } else {
                     helper.push('·');
-                }
-            }else if  i==width-1 && j==lenght-1{
-                
-                let mut counter=0;
-
-                if  minefield[i].chars().nth(j-1).unwrap() == '*'{ 
-                    counter+=1;
-                }
-                
-                if  minefield[i-1].chars().nth(j).unwrap() == '*'{
-                    counter+=1;
-                }
-                
-                if minefield[i-1].chars().nth(j-1).unwrap() == '*' {
-                    counter+=1
-                }
-                
-                if counter!=0{
-                    let counter_char=(counter + b'0') as char;
-                    
-                    helper.push(counter_char);
-                }else {
-                     helper.push('·');
-                }
-            }else if i==width-1 && j==0 {
-                
-                let mut counter=0;
-
-                if  minefield[i].chars().nth(j+1).unwrap() == '*'{ 
-                    counter+=1;
-                }
-                
-                if  minefield[i-1].chars().nth(j).unwrap() == '*'{
-                    counter+=1;
-                }
-                
-                if minefield[i-1].chars().nth(j+1).unwrap() == '*' {
-                    counter+=1
-                }
-                
-                if counter!=0{
-                    let counter_char=(counter + b'0') as char;
-                    
-                    helper.push(counter_char);
-                }else{
-                     helper.push('·');
-                }
-            }else if i==0 && j==lenght-1 {
-                let mut counter=0;
-
-                if  minefield[i].chars().nth(j-1).unwrap() == '*'{ 
-                    counter+=1;
-                }
-                
-                if  minefield[i+1].chars().nth(j).unwrap() == '*'{
-                    counter+=1;
-                }
-                
-                if minefield[i+1].chars().nth(j-1).unwrap() == '*' {
-                    counter+=1
-                }
-                
-                if counter!=0{
-                    let counter_char=(counter + b'0') as char;
-                    
-                    helper.push(counter_char);
-                }else if minefield[i].chars().nth(j).unwrap() == ' ' {
-                    helper.push(' ')
-                }
-                else {
-                    helper.push('·');
-                }
-            }else if i==0 {
-                let mut counter=0;
-
-                if  minefield[i].chars().nth(j+1).unwrap() == '*'{ 
-                    counter+=1;
-                }
-                
-                if  minefield[i].chars().nth(j-1).unwrap() == '*'{
-                    counter+=1;
-                }
-                
-                if minefield[i+1].chars().nth(j).unwrap() == '*' {
-                    counter+=1
-                }
-                
-                if minefield[i+1].chars().nth(j+1).unwrap() == '*' {
-                    counter+=1
-                }
-                if minefield[i+1].chars().nth(j-1).unwrap() == '*' {
-                    counter+=1
-                }
-                if counter!=0{
-                    let counter_char=(counter + b'0') as char;
-                    
-                    helper.push(counter_char);
-                }else{ 
-                    helper.push('·');
-                }
-            }else if i==width-1 {
-                let mut counter=0;
-
-                if  minefield[i].chars().nth(j+1).unwrap() == '*'{ 
-                    counter+=1;
-                }
-                
-                if  minefield[i].chars().nth(j-1).unwrap() == '*'{
-                    counter+=1;
-                }
-                
-                if minefield[i-1].chars().nth(j).unwrap() == '*' {
-                    counter+=1
-                }
-                
-                if minefield[i-1].chars().nth(j+1).unwrap() == '*' {
-                    counter+=1
-                }
-                if minefield[i-1].chars().nth(j-1).unwrap() == '*' {
-                    counter+=1
-                }
-                if counter!=0{
-                    let counter_char=(counter + b'0') as char;
-                    
-                    helper.push(counter_char);
-                }else{ 
-                    helper.push('·');
-                }
-            }else if j==0 {
-                let mut counter=0;
-
-                if  minefield[i+1].chars().nth(j).unwrap() == '*'{ 
-                    counter+=1;
-                }
-                
-                if  minefield[i-1].chars().nth(j).unwrap() == '*'{
-                    counter+=1;
-                }
-                
-                if minefield[i].chars().nth(j+1).unwrap() == '*' {
-                    counter+=1
-                }
-                
-                if minefield[i+1].chars().nth(j+1).unwrap() == '*' {
-                    counter+=1
-                }
-                if minefield[i-1].chars().nth(j+1).unwrap() == '*' {
-                    counter+=1
-                }
-                if counter!=0{
-                    let counter_char=(counter + b'0') as char;
-                    
-                    helper.push(counter_char);
-                }else{ 
-                    helper.push('·');
-                }
-            }else if j==lenght-1 {
-                let mut counter=0;
-
-                if  minefield[i+1].chars().nth(j).unwrap() == '*'{ 
-                    counter+=1;
-                }
-                
-                if  minefield[i-1].chars().nth(j).unwrap() == '*'{
-                    counter+=1;
-                }
-                
-                if minefield[i].chars().nth(j-1).unwrap() == '*' {
-                    counter+=1
-                }
-                
-                if minefield[i+1].chars().nth(j-1).unwrap() == '*' {
-                    counter+=1
-                }
-                if minefield[i-1].chars().nth(j-1).unwrap() == '*' {
-                    counter+=1
-                }
-                if counter!=0{
-                    let counter_char=(counter + b'0') as char;
-                    
-                    helper.push(counter_char);
-                }else{ 
-                    helper.push('·');
-                }
-            }else {
-                let mut counter=0;
-
-                if  minefield[i].chars().nth(j+1).unwrap() == '*'{ 
-                    counter+=1;
-                }
-                
-                if  minefield[i].chars().nth(j-1).unwrap() == '*'{
-                    counter+=1;
-                }
-                
-                if minefield[i+1].chars().nth(j).unwrap() == '*' {
-                    counter+=1
-                }
-                
-                if minefield[i-1].chars().nth(j).unwrap() == '*' {
-                    counter+=1
-                }
-                if minefield[i+1].chars().nth(j-1).unwrap() == '*' {
-                    counter+=1
-                }
-                if minefield[i+1].chars().nth(j+1).unwrap() == '*' {
-                    counter+=1
-                }
-                if minefield[i-1].chars().nth(j-1).unwrap() == '*' {
-                    counter+=1
-                }
-                if minefield[i-1].chars().nth(j+1).unwrap() == '*' {
-                    counter+=1
-                }
-                if counter!=0{
-                    let counter_char=(counter + b'0') as char;
-                    
-                    helper.push(counter_char);
-                }else{ 
-                    helper.push('·')
                 }
             }
-           }
-           
         }
+
         completed.push(helper.clone());
         helper.clear();
-    }}
+    }
 
-    completed
+ completed
 }
 
 pub fn input_validation(initial: &str) -> Vec<&str>{
@@ -400,25 +114,10 @@ pub fn input_validation(initial: &str) -> Vec<&str>{
 
 }
 
-/*pub fn argument_reading() -> String{
-
-    let mut read = String::new();
-    if console::args().count() !=2 {
-        eprintln!("{} not the right arguments - build run <minesweeper>;","Error:".bold().red());
-        exit(1);
-    }
-
-    for i in console::args().skip(1){
-        read=i;
-    }
-
-    read
-} */
-
 fn main() {
     
-    let initial: &str ="*\n \n*";
-    if initial.len()==0 || initial.len()==1{
+    let initial: &str ="*\n \n*\n ";
+    if initial.is_empty() || initial.len()==1{
         println!("{:}",initial);
     }
     else{

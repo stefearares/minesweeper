@@ -3,18 +3,24 @@ use std::env as console;
 use colored::*;
 use std::char;
 
+use std::fs::File;
+use std::io::Read;
+use std::env;
+
+
 pub fn annotate(minefield: &[&str]) -> Vec<String> {
     
     let mut completed: Vec<String> = Vec::new();
     
-    let width = minefield.len() ;
-    let lenght= minefield[0].chars().count();
-    
-    if width==0 && lenght==0{
+    let width = minefield.len();
+    let lenght= get_len_formatted(&minefield[0]); 
+
+    if width == 0 && lenght == 0{
         completed.push("".to_string());
         return completed;
     }
-    let mut helper: String=String::new();
+
+    let mut helper: String = String::new();
 
     for i in 0..width{
         for j in 0..lenght{
@@ -26,50 +32,61 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
             if minefield[i].chars().nth(j).unwrap() == '·' || minefield[i].chars().nth(j).unwrap() == ' ' {
                 let mut counter=0;
 
-                if i != 0 && minefield[i-1].chars().nth(j).unwrap() == '*' {
-                    counter+=1;
+                // Top and Bottom
+                if i != 0 {
+                    if  minefield[i-1].chars().nth(j).unwrap() == '*'{
+                        counter+=1;
+                    }
                 }
-                
                 if i != width-1{
                     if  minefield[i+1].chars().nth(j).unwrap() == '*'{
                         counter+=1;
-                    }}   
+                    }
+                }   
                 
+                // Sides
                 if j != 0{
                     if  minefield[i].chars().nth(j-1).unwrap() == '*'{
                         counter+=1;
                     }
                 }
-
                 if j != lenght-1{
                     if  minefield[i].chars().nth(j+1).unwrap() == '*'{
                         counter+=1;
                     }
                 }
 
+                // Diagonals
                 if i != 0 && j != 0{
                     if minefield[i-1].chars().nth(j-1).unwrap() == '*'{
                         counter+=1;
                     }
                 }
-
                 if i != width-1 && j != lenght-1{
                     if minefield[i+1].chars().nth(j+1).unwrap() == '*'{
                         counter+=1;
                     }
                 }
 
-                if i != 0 && j != lenght-1 && minefield[i-1].chars().nth(j+1).unwrap() == '*' {
-                    counter += 1;
+                if i != 0 && j != lenght-1{
+                    if minefield[i-1].chars().nth(j+1).unwrap() == '*' {
+                        counter += 1;
+                    }
                 }
-                if i != width-1 && j != 0 && minefield[i+1].chars().nth(j-1).unwrap() == '*' {
-                    counter += 1;
+                if i != width-1 && j != 0 {
+                    if minefield[i+1].chars().nth(j-1).unwrap() == '*' {
+                        counter += 1;
+                    }
                 }
 
+                // Substitutes the Character.
                 if counter != 0 {
-                    let mut counter_char=(counter + b'0') as char;
+                    let counter_char=(counter + b'0') as char;
                     helper.push(counter_char);
-                } else {
+                } 
+                else if minefield[i].chars().nth(j).unwrap() == ' ' && counter == 0{
+                    helper.push('·');
+                } else if minefield[i].chars().nth(j).unwrap() == '·'  && counter == 0{
                     helper.push('·');
                 }
             }
@@ -79,51 +96,104 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
         helper.clear();
     }
 
- completed
+    completed
+}
+
+
+pub fn get_len_formatted(format: &&str) -> usize {
+    let mut count = 0;
+    for c in format.chars() {
+        if c != '\n' && c != '\r' {
+            count += 1;
+        }
+    }
+    count
 }
 
 pub fn input_validation(initial: &str) -> Vec<&str>{
 
+    let split = initial.split('\n');
     let mut formatted:Vec<&str>=Vec::new();
 
-    for i in initial.chars()
-    {
-        if i != '·' && i != '*' && i != '\n' && i!=' '{
-            eprintln!("{}: {} is not valid <'·',' ' for free space and '*' for bombs>","Error".red().bold(),i);
-            exit(1);
-        }
-    }
-
-    let split=initial.split('\n');
-    
     for i in split{
         formatted.push(i);
     }
- 
-    let lenght=formatted[0].chars().count();
-   
-    for i in &formatted{
-        let verifier=i.chars().count();
 
-        if verifier != lenght {
-            eprintln!("{}: the minesweeper can't have different sized rows.","Error".red().bold());
+    for format in &formatted{
+        for i in format.chars()
+        {
+            if i != '·' && i != '*' && i != ' ' && i != '\r' {
+                eprintln!("[{}]: [{}] is not valid <'.' for free space and '*' for bombs>", "Error".red().bold(), i);
+                exit(1);
+            }
+        }
+    }
+
+    let deafult_size = get_len_formatted(&formatted[0]);
+
+   for format in &formatted{
+
+        let size = get_len_formatted(format);        
+
+        if deafult_size != size {
+            eprintln!("{}: the minesweeper can't have different sized rows.", "Error".red().bold());
             exit(1);
         }
     }
-     
+
     formatted
 
 }
 
 
-fn main() {
-    
-    let initial: &str ="*\n \n*\n ";
+fn vec_print(vector: Vec<String>){
+    for string in vector {
+        println!("{}", string);
+    }
+}
 
-    let new= initial.replace(' ', "·");
-    let minefield=input_validation(&new);
-    let completed=annotate(&minefield);
+fn main() {
+    // "C:/Users/rafap/Desktop/RUST/learnfrompdfs/src/test1.txt"
     
+    let args: Vec<String> = env::args().collect();
+
+    // Check if a filename is provided as a command-line argument
+    if args.len() < 2 {
+        eprintln!("{}: {}cargo run <filename>","Usage".red().bold(),"$".green());
+        exit(1);
+    }
+
+    let filename = &args[1];
+    
+    let initial: String = match File::open(filename) {
+        Ok(mut file) => {
+            let mut contents = String::new();
+            if let Err(_) = file.read_to_string(&mut contents) {
+                eprintln!("{}: reading file {}", "Error".red().bold(),filename);
+                exit(1);
+            }
+            contents
+        },
+        Err(_) => {
+            eprintln!("{}: reading file {}","Error:".red().bold() ,filename);
+            exit(1);
+        }
+    };
+    
+    // With Text file in command line.
+    let initial_s = initial.as_str();
+    let minefield = input_validation(&initial_s);  
+    let result = annotate(&minefield);
+    
+
+    // With predifined string.
+    /*let initial: &str =" *  * \n  *   \n    * \n   * *\n *  * \n      ";
+    let minefield = input_validation(&initial);
+    let result = annotate(&minefield);
+    */
+
+    vec_print(result);
+
 }
 
 #[cfg(test)]

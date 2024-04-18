@@ -83,6 +83,8 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
 
 pub fn input_validation(initial: &str) -> Vec<&str>{
 
+    let mut formatted:Vec<&str>=Vec::new();
+
     for i in initial.chars()
     {
         if i != '·' && i != '*' && i != '\n' && i!=' '{
@@ -91,10 +93,8 @@ pub fn input_validation(initial: &str) -> Vec<&str>{
         }
     }
 
-
     let split=initial.split('\n');
-    let mut formatted:Vec<&str>=Vec::new();
-
+    
     for i in split{
         formatted.push(i);
     }
@@ -114,18 +114,145 @@ pub fn input_validation(initial: &str) -> Vec<&str>{
 
 }
 
+pub fn special_cases(initial: &str) -> bool{
+    if initial.is_empty(){
+        println!("");
+
+       return false;
+    }
+
+    if initial.len()==1{
+        if initial != "·" && initial != "*" && initial != "\n" && initial!=" " {
+            eprintln!("{}: {} is not valid <'·',' ' for free space and '*' for bombs>","Error".red().bold(),initial);
+            exit(1);
+        }
+        else {
+            println!("{}",initial);
+            return false;
+        }
+    }
+    return true;
+}
+
 fn main() {
     
     let initial: &str ="*\n \n*\n ";
-    if initial.is_empty() || initial.len()==1{
-        println!("{:}",initial);
-    }
-    else{
+
+    if special_cases(initial){
     let new= initial.replace(' ', "·");
     let minefield=input_validation(&new);
     let completed=annotate(&minefield);
-    
-    for i in completed{
-        println!("{}",i);
-    }}
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn special_case_test() {
+        assert!(!special_cases(""));
+        assert!(!special_cases("*"));
+        assert!(!special_cases(" "));
+        assert!(special_cases("***"));
+    }
+
+    #[test]
+    fn  cases_test1(){
+        let initial: &str ="·*·*·\n··*··\n··*··\n·····";
+        let new= initial.replace(' ', "·");
+        let minefield=input_validation(&new);
+        assert_eq!(annotate(&minefield),["1*3*1","13*31","·2*2·","·111·"])
+
+    }
+
+    #[test]
+    fn edge_cases_test2(){
+        let initial: &str ="***\n***\n***\n***";
+        let new= initial.replace(' ', "·");
+        let minefield=input_validation(&new);
+        assert_eq!(annotate(&minefield),["***","***","***","***"])
+
+    }
+
+    #[test]
+    fn edge_cases_test3(){
+        let initial: &str ="   \n   \n   \n   ";
+        let new= initial.replace(' ', "·");
+        let minefield=input_validation(&new);
+        assert_eq!(annotate(&minefield),["···","···","···","···"])
+
+    }
+
+    #[test]
+    fn edge_cases_test4(){
+        let initial: &str ="   \n * \n   ";
+        let new= initial.replace(' ', "·");
+        let minefield=input_validation(&new);
+        assert_eq!(annotate(&minefield),["111","1*1","111"])
+
+    }
+
+    #[test]
+    fn edge_cases_test5(){
+        let initial: &str ="***\n* *\n***";
+        let new= initial.replace(' ', "·");
+        let minefield=input_validation(&new);
+        assert_eq!(annotate(&minefield),["***","*8*","***"])
+
+    }
+
+    #[test]
+    fn edge_cases_test6(){
+        let initial: &str =" * * ";
+        let new= initial.replace(' ', "·");
+        let minefield=input_validation(&new);
+        assert_eq!(annotate(&minefield),["1*2*1"])
+
+    }
+
+    #[test]
+    fn edge_cases_test7(){
+        let initial: &str ="*   *";
+        let new= initial.replace(' ', "·");
+        let minefield=input_validation(&new);
+        assert_eq!(annotate(&minefield),["*1·1*"])
+
+    }
+
+    #[test]
+    fn edge_cases_test8(){
+        let initial: &str =" * * ";
+        let new= initial.replace(' ', "·");
+        let minefield=input_validation(&new);
+        assert_eq!(annotate(&minefield),["1*2*1"])
+
+    }
+
+    #[test]
+    fn edge_cases_test9(){
+        let initial: &str ="*   *";
+        let new= initial.replace(' ', "·");
+        let minefield=input_validation(&new);
+        assert_eq!(annotate(&minefield),["*1·1*"])
+
+    }
+
+    #[test]
+    fn edge_cases_test10(){
+        let initial: &str ="  *  \n  *  \n*****\n  *  \n  *  ";
+        let new= initial.replace(' ', "·");
+        let minefield=input_validation(&new);
+        assert_eq!(annotate(&minefield),["·2*2·","25*52","*****","25*52","·2*2·"])
+
+    }
+
+    #[test]
+    fn edge_cases_test11(){
+        let initial: &str =" *  * \n  *   \n    * \n   * *\n *  * \n      ";
+        let new= initial.replace(' ', "·");
+        let minefield=input_validation(&new);
+        assert_eq!(annotate(&minefield),["1*22*1","12*322","·123*2","112*4*","1*22*2","111111"])
+
+    }
 }

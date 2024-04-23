@@ -151,7 +151,6 @@ fn vec_print(vector: Vec<String>){
 }
 
 fn main() {
-    // "C:/Users/rafap/Desktop/RUST/learnfrompdfs/src/test1.txt"
     
     let args: Vec<String> = env::args().collect();
 
@@ -166,7 +165,7 @@ fn main() {
     let initial: String = match File::open(filename) {
         Ok(mut file) => {
             let mut contents = String::new();
-            if let Err(_) = file.read_to_string(&mut contents) {
+            if file.read_to_string(&mut contents).is_err() {
                 eprintln!("{}: reading file {}", "Error".red().bold(),filename);
                 exit(1);
             }
@@ -180,7 +179,7 @@ fn main() {
     
     // With Text file in command line.
     let initial_s = initial.as_str();
-    let minefield = input_validation(&initial_s);  
+    let minefield = input_validation(initial_s);  
     let result = annotate(&minefield);
     
 

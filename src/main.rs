@@ -67,7 +67,7 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
                 }
 
                 if i != 0 && j != lenght-1{
-                    if minefield[i-1].chars().nth(j+1).unwrap() == '*' {
+                    if minefield[i-1].chars().nth(j+1).unwrap() == '*' { //replace this
                         counter += 1;
                     }
                 }
@@ -121,21 +121,19 @@ pub fn input_validation(initial: &str) -> Vec<&str>{
         for i in format.chars()
         {
             if i != '·' && i != '*' && i != ' ' && i != '\r' {
-                eprintln!("[{}]: [{}] is not valid <'.' for free space and '*' for bombs>", "Error".red().bold(), i);
-                exit(1);
+                panic!("{}: {} is not valid <'.' or ' ' for free space and '*' for bombs>", "Error".red().bold(), i);
             }
         }
     }
 
     let deafult_size = get_len_formatted(&formatted[0]);
 
-   for format in &formatted{
+   for format in &formatted{   //in the first loop
 
         let size = get_len_formatted(format);        
 
         if deafult_size != size {
-            eprintln!("{}: the minesweeper can't have different sized rows.", "Error".red().bold());
-            exit(1);
+            panic!("{}: the minesweeper can't have different sized rows.", "Error".red().bold());
         }
     }
 
@@ -151,7 +149,7 @@ fn vec_print(vector: Vec<String>){
 }
 
 fn main() {
-    
+
     let args: Vec<String> = env::args().collect();
 
     // Check if a filename is provided as a command-line argument
@@ -165,15 +163,13 @@ fn main() {
     let initial: String = match File::open(filename) {
         Ok(mut file) => {
             let mut contents = String::new();
-            if file.read_to_string(&mut contents).is_err() {
-                eprintln!("{}: reading file {}", "Error".red().bold(),filename);
-                exit(1);
+            if file.read_to_string(&mut contents).is_err() { //add read buffer
+                panic!("{}: reading file to string {}", "Error".red().bold(),filename);
             }
             contents
         },
         Err(_) => {
-            eprintln!("{}: reading file {}","Error:".red().bold() ,filename);
-            exit(1);
+            panic!("{}: reading file {}","Error:".red().bold() ,filename);
         }
     };
     

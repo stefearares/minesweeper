@@ -1,8 +1,6 @@
 use std::process::exit;
-use std::env as console;
 use colored::*;
 use std::char;
-
 use std::fs::File;
 use std::io::Read;
 use std::env;

@@ -117,26 +117,26 @@ pub fn input_validation(initial: &str) -> Vec<&str>{
         formatted.push(i);
     }
 
+    let deafult_size = get_len_formatted(&formatted[0]);
+
     for format in &formatted{
+
+        let size = get_len_formatted(format);
+
         for i in format.chars()
         {
             if i != '·' && i != '*' && i != ' ' && i != '\r' {
                 panic!("{}: {} is not valid <'.' or ' ' for free space and '*' for bombs>", "Error".red().bold(), i);
             }
+                 
+            if deafult_size != size {
+                panic!("{}: the minesweeper can't have different sized rows.", "Error".red().bold());
+            }
         }
     }
 
-    let deafult_size = get_len_formatted(&formatted[0]);
-
-   for format in &formatted{   //in the first loop
-
-        let size = get_len_formatted(format);        
-
-        if deafult_size != size {
-            panic!("{}: the minesweeper can't have different sized rows.", "Error".red().bold());
-        }
-    }
-
+    
+    // TODO: 
     formatted
 
 }
@@ -188,6 +188,7 @@ fn main() {
     vec_print(result);
 
 }
+
 
 #[cfg(test)]
 mod tests {
